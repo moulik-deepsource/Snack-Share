@@ -3,6 +3,7 @@ const routes = {
     home: '/',
     login: '/login/:role',
     register: '/register/:role',
+    instructorDashboard: '/finaldashboard',
 };
 
 export const getRoute = (

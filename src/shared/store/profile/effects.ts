@@ -19,14 +19,14 @@ export const errorResponse = (errData: any): string | undefined => {
     return errRes;
 };
 
-export const getCurrentProfile = () => (dispatch: Dispatch<Action>) => {
-    dispatch(setProfileLoading());
+export const getCurrentProfile = () => async (dispatch: Dispatch<Action>) => {
+    await dispatch(setProfileLoading());
     const config: AxiosRequestConfig = {
         method: 'get',
         url: '/api/profile',
     };
 
-    axios(config)
+    await axios(config)
         .then((res) => dispatch(getProfile(res.data)))
         .catch((_err) => dispatch(getProfile({} as Profile)));
 };

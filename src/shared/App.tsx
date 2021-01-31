@@ -6,10 +6,11 @@ import { useDispatch } from 'react-redux';
 import favicon from '../shared/assets/favicon.png';
 import setAuthToken from './utils/setAuthToken';
 import { dispatchSetCurrentUser, logoutUser } from './store/auth/effects';
-
+import '@babel/polyfill';
 import Home from './pages/Home';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
+import InstructorDashboard from './components/InstructorDashboard/InstructorDashboard';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 
@@ -61,6 +62,7 @@ const App: React.FC<any> = () => {
                 <Route exact path={routes.home} component={Home} />
                 <Route exact path={routes.login} component={Login} />
                 <Route exact path={routes.register} component={Register} />
+                <Route exact path={routes.instructorDashboard} component={InstructorDashboard} />
                 <Route render={() => '404!'} />
             </Switch>
             <Footer />
