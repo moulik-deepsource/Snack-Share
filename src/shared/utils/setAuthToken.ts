@@ -6,8 +6,20 @@ const setAuthToken = (token: any) => {
         axios.defaults.headers.common['Authorization'] = token;
     } else {
         // eslint-disable-next-line dot-notation
-        delete axios.defaults.headers.common['Authorization'];
+        axios.defaults.headers.common['Authorization'] = null;
     }
 };
+
+// const setAuthToken = (token: any) => {
+//     axios.interceptors.request.use(
+//         (config) => {
+//             config.headers.authorization = `Bearer ${token}`;
+//             return config;
+//         },
+//         (err) => {
+//             return Promise.reject(err);
+//         }
+//     );
+// };
 
 export default setAuthToken;

@@ -33,12 +33,12 @@ export const getCurrentUserProfileCtrl = (req: Request, res: Response) => {
     getCurrentUserProfileService(profileModel, req.user.id)
         .then((profile) => {
             if (!profile) {
-                errors.noprofile = 'There is no profile for this user';
-                return res.status(404).json(errors);
+                errors.noprofile = 'There is no profile for this user! Not BUGGGG';
+                return res.status(200).json(errors);
             }
             res.json(profile);
         })
-        .catch((err) => res.status(404).json(err));
+        .catch((err) => res.status(400).json(err));
 };
 
 export const getAllProfilesCtrl = (_req: Request, res: Response) => {

@@ -2,10 +2,14 @@ import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+//
+import { getCurrentProfile, getCurrentProfile2 } from 'store/profile/effects';
 import favicon from '../shared/assets/favicon.png';
 import setAuthToken from './utils/setAuthToken';
 import { dispatchSetCurrentUser, logoutUser } from './store/auth/effects';
+import { getAuth } from './store/auth/selectors';
+import { getProfile } from './store/profile/selectors';
 
 import Home from './pages/Home';
 import Login from './pages/Login/Login';
@@ -28,6 +32,8 @@ import './styles/sass/main.scss';
 const App: React.FC<any> = () => {
     const dispatch = useDispatch();
     const history = useHistory();
+    const auth = useSelector(getAuth);
+    const profile = useSelector(getProfile);
 
     React.useEffect(() => {
         if (localStorage.jwtToken) {
@@ -37,7 +43,7 @@ const App: React.FC<any> = () => {
             const decoded = jwtDecode(localStorage.jwtToken);
             // Set user and isAuthenticated by call any action using bellow method
             dispatch(dispatchSetCurrentUser(decoded as any));
-
+            dispatch(getCurrentProfile(localStorage.jwtToken));
             // Check for expired token
             const currentTime = Date.now() / 1000;
             if ((decoded as any).exp < currentTime) {
@@ -46,6 +52,16 @@ const App: React.FC<any> = () => {
             }
         }
     }, [dispatch, history]);
+
+    console.log('is authenticated', auth.isAuthenticated);
+    console.log('user', auth.users);
+    console.log('loading', profile.loading);
+    console.log('profile', profile.profile);
+    console.log('profiles', profile.profiles);
+
+    if (profile.loading === true) {
+        return <h1>LOADING................</h1>;
+    }
 
     return (
         // <Suspense fallback={<div>Loading</div>}>

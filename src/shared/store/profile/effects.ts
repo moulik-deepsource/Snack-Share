@@ -19,16 +19,47 @@ export const errorResponse = (errData: any): string | undefined => {
     return errRes;
 };
 
-export const getCurrentProfile = () => (dispatch: Dispatch<Action>) => {
+export const getCurrentProfile2 = (token: any) => (dispatch: Dispatch<Action>) => {
+    // eslint-disable-next-line prefer-const
+    let myHeaders = new Headers();
+    myHeaders.append('Authorization', token);
+    // eslint-disable-next-line prefer-const
+    let requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow',
+    };
+
+    fetch('http://localhost:8500/api/profile', requestOptions as RequestInit)
+        .then((response) => response.text())
+        .then((result) => {
+            console.log('thanh cong');
+            console.log(result);
+        })
+        .catch((error) => console.log('error', error));
+};
+
+export const getCurrentProfile = (token?: any) => (dispatch: Dispatch<Action>) => {
     dispatch(setProfileLoading());
     const config: AxiosRequestConfig = {
         method: 'get',
         url: '/api/profile',
+        // headers: {
+        //     Authorization: token,
+        // },
     };
 
     axios(config)
-        .then((res) => dispatch(getProfile(res.data)))
-        .catch((_err) => dispatch(getProfile({} as Profile)));
+        .then((res) => res.data)
+        .then((result) => {
+            console.log('thanh cong');
+            console.log(result);
+            dispatch(getProfile(result));
+        })
+        .catch((err) => {
+            console.log('that bai', err);
+            dispatch(getProfile({} as Profile));
+        });
 };
 
 export const createProfile = (
