@@ -4,8 +4,8 @@ import { Action, ProfileState } from './types';
 
 export const initialState = Object.freeze<ProfileState>({
     profile: {
-        profile: null,
-        profiles: null,
+        profile: {},
+        profiles: {},
         loading: false,
     },
 });

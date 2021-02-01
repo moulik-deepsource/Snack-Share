@@ -55,6 +55,10 @@ const App: React.FC<any> = () => {
     console.log('profiles', profile.profiles);
     console.log('loading', profile.loading);
 
+    // if (profile?.profile?.res === 'There is no profile for this user') {
+    //     return <h1>No profile for this user</h1>;
+    // }
+
     return (
         // <Suspense fallback={<div>Loading</div>}>
         <div className={css.wrapper}>

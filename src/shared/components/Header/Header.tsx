@@ -1,6 +1,7 @@
 import React, { FormEvent } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import withAuthProps from 'hoc/withAuthProps';
 import { getAuth } from '../../store/auth/selectors';
 
 import { logoutUser } from '../../store/auth/effects';
@@ -8,11 +9,25 @@ import { logoutUser } from '../../store/auth/effects';
 import { FilterStyles } from '../../styles/Filter.Styles';
 import { HeaderStyles } from './Header.Styles';
 
-const Header = () => {
-    const auth = useSelector(getAuth);
+const Header = ({ auth }: any) => {
+    // eslint-disable-next-line prefer-const
+    let authClone: any;
+    if (!auth.users || auth?.isAuthenticated === false) {
+        authClone = {
+            isAuthenticated: false,
+            users: {},
+        };
+    }
+    if (auth?.isAuthenticated === true) {
+        authClone = auth;
+    }
+    // const auth2 = useSelector(getAuth);
     const dispatch = useDispatch();
     const location = useLocation();
     const history = useHistory();
+    console.log('dosomething', auth);
+    console.log('dosomething2', authClone);
+    // console.log('dosomething2', auth2);
 
     const checkHomeRoute = location?.pathname === '/';
     const checkLoginRoute = location?.pathname?.includes('login');
@@ -23,7 +38,7 @@ const Header = () => {
     const checkCategoryRoute = location?.pathname === '/ShowCategoryList';
     const checkEnrollRoute = location?.pathname === '/EnrollmentList';
     const checkMyCoursesRoute =
-        location?.pathname?.includes(`/services/${auth.users.id}`) ||
+        location?.pathname?.includes(`/services/${authClone?.users?.id}`) ||
         location?.pathname?.includes('/servicesforstudent/');
     const CheckAddcourseRoute = location?.pathname?.includes('addcourse');
     const checkAddLectureRoute = location?.pathname?.includes('add-lecture');
@@ -46,11 +61,6 @@ const Header = () => {
     const classProfile = `filter-item ${checkProfileRoute ? 'active' : ''}`;
     const classAllProfile = `filter-item ${checkAllProfileRoute ? 'active' : ''}`;
 
-    if (typeof window !== 'undefined') {
-        localStorage.setItem('userid', JSON.stringify(auth.users.id));
-        localStorage.setItem('userRole', JSON.stringify(auth.users.role));
-    }
-
     const logoutClick = (e: FormEvent) => {
         e.preventDefault();
         dispatch(logoutUser(() => history?.push('/')));
@@ -66,7 +76,7 @@ const Header = () => {
                     <p className="slogan">Share all knowledge we have with 😘</p>
                 </div>
             </HeaderStyles>
-            {auth?.users?.role === 'admin' ? (
+            {authClone?.users?.role === 'admin' ? (
                 <FilterStyles>
                     <Link to="/">
                         <span className={classNameHome}>Home</span>
@@ -90,18 +100,18 @@ const Header = () => {
                         <span className="filter-item">Logout</span>
                     </Link>
                 </FilterStyles>
-            ) : auth.users.role === 'instructor' ? (
+            ) : authClone.users.role === 'instructor' ? (
                 <FilterStyles>
                     <Link to="/">
                         <span className={classNameHome}>Home</span>
                     </Link>
-                    <Link to={`/services/${auth.users.id}`}>
+                    <Link to={`/services/${authClone?.users?.id}`}>
                         <span className={classMyCourses}>My Courses</span>
                     </Link>
-                    <Link to={`/addcourse/${auth.users.id}`}>
+                    <Link to={`/addcourse/${authClone?.users?.id}`}>
                         <span className={classAddCourse}>Add Courses</span>
                     </Link>
-                    <Link to={`/add-lecture/${auth.users.id}`}>
+                    <Link to={`/add-lecture/${authClone?.users?.id}`}>
                         <span className={classAddLecture}>Add Lecture</span>
                     </Link>
                     <Link to="/services">
@@ -117,12 +127,12 @@ const Header = () => {
                         <span className="filter-item">Logout</span>
                     </Link>
                 </FilterStyles>
-            ) : auth.users.role === 'student' ? (
+            ) : authClone?.users?.role === 'student' ? (
                 <FilterStyles>
                     <Link to="/">
                         <span className={classNameHome}>Home</span>
                     </Link>
-                    <Link to={`/servicesforstudent/${auth.users.id}`}>
+                    <Link to={`/servicesforstudent/${authClone?.users?.id}`}>
                         <span className={classMyCourses}>My Courses</span>
                     </Link>
                     <Link to="/services">
@@ -149,4 +159,4 @@ const Header = () => {
     );
 };
 
-export default Header;
+export default withAuthProps(Header);
